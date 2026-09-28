@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detetive Matemático</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .subtitulo {
+            color: #5f6368;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Abas de Entrada Principal (Aluno / Professor) */
+        .abas-entrada {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .aba-btn {
+            padding: 8px 18px;
+            border: 2px solid #1a73e8;
+            background: transparent;
+            color: #1a73e8;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .aba-btn.ativa {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        /* Sub-abas de Login/Cadastro */
+        .sub-abas-modo {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .sub-aba-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .sub-aba-btn.ativa {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+        }
+
+        /* Form Cadastro / Login */
+        .card-cadastro {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .campo-form {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: left;
+        }
+
+        .campo-form label {
+            font-weight: 600;
+            color: #444;
+        }
+
+        .campo-form input, .campo-form select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn-entrar {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-entrar:hover {
+            background-color: #1557b0;
+        }
+
+        /* Painel de Usuário */
+        .header-usuario {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e8f0fe;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .btn-trocar-aluno {
+            background-color: #d90429;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .instrucoes {
+            background-color: #e8f0fe;
+            padding: 15px;
+            border-left: 5px solid #1a73e8;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            line-height: 1.5;
+        }
+
+        .desafio {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .desafio.ativo {
+            border-color: #1a73e8;
+            box-shadow: 0 0 10px rgba(26, 115, 232, 0.2);
+        }
+
+        .header-desafio {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .desafio h2 {
+            margin: 0;
+            color: #34a853;
+            font-size: 1.2rem;
+        }
+
+        .controles-timer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-iniciar-desafio {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-iniciar-desafio:hover {
+            background-color: #1557b0;
+        }
+
+        .btn-iniciar-desafio:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .cronometro-box {
+            font-family: 'Consolas', monospace;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #1a73e8;
+            background-color: #e8f0fe;
+            padding: 4px 10px;
+            border-radius: 15px;
+            border: 1px solid #1a73e8;
+        }
+
+        .cronometro-box.alerta {
+            color: #d90429;
+            background-color: #ffe5ec;
+            border-color: #d90429;
+            animation: pulsar 1s infinite;
+        }
+
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .enunciado {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .linha-conta {
+            padding: 12px;
+            margin: 8px 0;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 1.05em;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .linha-conta.bloqueada {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .linha-conta.linha-desativada {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            background-color: #f1f1f1 !important;
+            text-decoration: line-through;
+        }
+
+        .linha-conta:not(.bloqueada):not(.linha-desativada):hover {
+            background-color: #e8eaed;
+            transform: translateX(4px);
+        }
+
+        .destaque-erro-piscando {
+            color: #d90429;
+            font-weight: bold;
+            background-color: #ffccd5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px dashed #d90429;
+            animation: piscar 0.8s infinite alternate;
+        }
+
+        @keyframes piscar {
+            0% { opacity: 1; background-color: #ffccd5; }
+            100% { opacity: 0.2; background-color: transparent; }
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 24px;
+            line-height: 1.4;
+        }
+
+        .correto { color: #2b9348; }
+        .incorreto { color: #d90429; }
+
+        /* Tabela do Professor */
+        .secao-ranking {
+            margin-top: 20px;
+        }
+
+        .tabela-ranking {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .tabela-ranking th, .tabela-ranking td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .tabela-ranking th {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        /* Estilos do Painel do Professor */
+        .painel-professor-acoes {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-acao-prof {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            background-color: #d90429;
+        }
+
+        .detalhes-tempo {
+            font-size: 0.85rem;
+            color: #555;
+            list-style: none;
+            padding-left: 0;
+            margin: 5px 0 0 0;
+        }
+
+        .detalhes-tempo li {
+            background: #f8f9fa;
+            margin: 2px 0;
+            padding: 3px 6px;
+            border-radius: 4px;
+            border-left: 3px solid #1a73e8;
+        }
+
+        .btn-deletar-aluno {
+            background: #d90429;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Modal Próxima Fase e Final */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.visivel {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.visivel .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-box h2 {
+            color: #1a73e8;
+            margin-top: 0;
+        }
+
+        .modal-botoes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn-modal {
+            padding: 10px 24px;
+            border-radius: 20px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-confirmar { background-color: #34a853; color: white; }
+        .btn-confirmar:hover { background-color: #2b9348; }
+        .btn-cancelar { background-color: #dadce0; color: #333; }
+        .btn-cancelar:hover { background-color: #bdc1c6; }
+
+        .escondido { display: none !important; }
+
+        /* Estilo da caixa de resultado do aluno */
+        .resultado-classificacao {
+            background: #e8f0fe;
+            border: 2px solid #1a73e8;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .resultado-classificacao h3 {
+            margin-top: 0;
+            color: #1a73e8;
+        }
+        .msg-sucesso {
+            color: #2b9348;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .msg-fracasso {
+            color: #d90429;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔍 Detetive Matemático</h1>
+    <div class="subtitulo" id="indicador-fase">Identificação do Investigador</div>
+
+    <div class="container">
+        <!-- TELA 1: SELEÇÃO / CADASTRO -->
+        <div id="tela-cadastro">
+            <div class="abas-entrada">
+                <button class="aba-btn ativa" id="aba-aluno" onclick="alternarAba('aluno')">👨‍🎓 Aluno</button>
+                <button class="aba-btn" id="aba-professor" onclick="alternarAba('professor')">👨‍🏫 Professor</button>
+            </div>
+
+            <!-- PAINEL ALUNO (LOGIN E CADASTRO) -->
+            <div id="area-aluno">
+                <div class="sub-abas-modo">
+                    <button class="sub-aba-btn ativa" id="sub-aba-aluno-login" onclick="alternarModoAluno('login')">Entrar</button>
+                    <button class="sub-aba-btn" id="sub-aba-aluno-cadastro" onclick="alternarModoAluno('cadastro')">Criar Conta</button>
+                </div>
+
+                <!-- FORMULÁRIO LOGIN ALUNO -->
+                <form id="form-aluno-login" class="card-cadastro" onsubmit="acessarAluno(event)">
+                    <div class="campo-form">
+                        <label for="login-nome-aluno">Nome Completo:</label>
+                        <input type="text" id="login-nome-aluno" required placeholder="Ex: João Silva">
+                    </div>
+                    <div class="campo-form">
+                        <label for="login-senha-aluno">Senha:</label>
+                        <input type="password" id="login-senha-aluno" required placeholder="Digite sua senha">
+                    </div>
+                    <button type="submit" class="btn-entrar">🕵️ Entrar no Jogo</button>
+                </form>
+
+                <!-- FORMULÁRIO CADASTRO ALUNO -->
+                <form id="form-aluno-cadastro" class="card-cadastro escondido" onsubmit="cadastrarAlunoTelaInicial(event)">
+                    <div class="campo-form">
+                        <label for="cad-nome-aluno">Nome:</label>
+                        <input type="text" id="cad-nome-aluno" required placeholder="Ex: João">
+                    </div>
+                    <div class="campo-form">
+                        <label for="cad-sobrenome-aluno">Sobrenome:</label>
+                        <input type="text" id="cad-sobrenome-aluno" required placeholder="Ex: Silva">
+                    </div>
+                    <div class="campo-form">
+                        <label for="cad-serie-aluno">Série/Ano:</label>
+                        <select id="cad-serie-aluno" required>
+                            <option value="" disabled selected hidden>Selecione a série...</option>
+                            <option value="6º Ano EF">6º Ano EF</option>
+                            <option value="7º Ano EF">7º Ano EF</option>
+                            <option value="8º Ano EF">8º Ano EF</option>
+                            <option value="9º Ano EF">9º Ano EF</option>
+                            <option value="1º Ano EM">1º Ano EM</option>
+                            <option value="2º Ano EM">2º Ano EM</option>
+                            <option value="3º Ano EM">3º Ano EM</option>
+                        </select>
+                    </div>
+                    <div class="campo-form">
+                        <label for="cad-senha-aluno">Crie uma Senha:</label>
+                        <input type="password" id="cad-senha-aluno" required placeholder="Digite uma senha">
+                    </div>
+                    <div class="campo-form">
+                        <label for="cad-confirm-senha-aluno">Confirme a Senha:</label>
+                        <input type="password" id="cad-confirm-senha-aluno" required placeholder="Repita a senha">
+                    </div>
+                    <button type="submit" class="btn-entrar">📝 Cadastrar Aluno</button>
+                </form>
+            </div>
+
+            <!-- PAINEL PROFESSOR (LOGIN E CADASTRO) -->
+            <div id="area-professor" class="escondido">
+                <div class="sub-abas-modo">
+                    <button class="sub-aba-btn ativa" id="sub-aba-prof-login" onclick="alternarModoProfessor('login')">Entrar</button>
+                    <button class="sub-aba-btn" id="sub-aba-prof-cadastro" onclick="alternarModoProfessor('cadastro')">Criar Conta</button>
+                </div>
+
+                <!-- FORMULÁRIO LOGIN PROFESSOR -->
+                <form id="form-professor-login" class="card-cadastro" onsubmit="acessarProfessor(event)">
+                    <div class="campo-form">
+                        <label for="nome-prof">Nome do Professor:</label>
+                        <input type="text" id="nome-prof" required placeholder="Ex: Prof. Carlos">
+                    </div>
+                    <div class="campo-form">
+                        <label for="senha-prof">Senha do Professor:</label>
+                        <input type="password" id="senha-prof" required placeholder="Digite a senha">
+                    </div>
+                    <button type="submit" class="btn-entrar">📊 Acessar Painel</button>
+                </form>
+
+                <!-- FORMULÁRIO CADASTRO PROFESSOR -->
+                <form id="form-professor-cadastro" class="card-cadastro escondido" onsubmit="cadastrarProfessorTelaInicial(event)">
+                    <div class="campo-form">
+                        <label for="cad-nome-prof">Nome do Professor:</label>
+                        <input type="text" id="cad-nome-prof" required placeholder="Ex: Prof. Ana Silva">
+                    </div>
+                    <div class="campo-form">
+                        <label for="cad-senha-prof">Crie uma Senha:</label>
+                        <input type="password" id="cad-senha-prof" required placeholder="Digite sua nova senha">
+                    </div>
+                    <div class="campo-form">
+                        <label for="cad-confirm-senha-prof">Confirme a Senha:</label>
+                        <input type="password" id="cad-confirm-senha-prof" required placeholder="Repita a senha">
+                    </div>
+                    <button type="submit" class="btn-entrar">📝 Cadastrar Professor</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TELA 2: JOGO (ALUNO) -->
+        <div id="tela-jogo" class="escondido">
+            <div class="header-usuario">
+                <div>
+                    👤 Aluno: <span id="info-aluno-nome"></span> (<span id="info-aluno-serie"></span>) | 
+                    ⭐ Acertos: <span id="info-aluno-pontos">0</span> |
+                    ❌ Erros: <span id="info-aluno-erros">0</span>
+                </div>
+                <button class="btn-trocar-aluno" onclick="sairParaLogin()">Sair</button>
+            </div>
+
+            <div class="instrucoes">
+                <strong>Como jogar:</strong> O jogo possui 4 fases temáticas (Etapa 1: Pitágoras, Etapa 2: Lei dos Senos, Etapa 3: Lei dos Cossenos, Etapa 4: Relações de Semelhança). Para cada desafio, clique no botão <strong>▶️ Começar</strong> para iniciar o cronômetro de 60 segundos e identifique o passo com o erro matemático!
+            </div>
+
+            <div id="lista-desafios"></div>
+        </div>
+
+        <!-- TELA 3: PAINEL EXCLUSIVO DO PROFESSOR -->
+        <div id="tela-professor" class="escondido">
+            <div class="header-usuario">
+                <div>👨‍🏫 Painel de Monitoramento | <span id="info-prof-nome"></span></div>
+                <button class="btn-trocar-aluno" onclick="sairParaLogin()">Sair do Painel</button>
+            </div>
+
+            <div class="painel-professor-acoes">
+                <button class="btn-acao-prof" onclick="abrirModalCadastrarAlunoProf()">➕ Cadastrar Novo Aluno</button>
+                <button class="btn-acao-prof" onclick="abrirModalCadastrarNovoProf()">👨‍🏫 Cadastrar Novo Professor</button>
+                <button class="btn-acao-prof btn-danger" onclick="limparHistoricoGeral()">🗑️ Limpar Todos os Dados</button>
+            </div>
+
+            <div class="secao-ranking">
+                <h3>📊 Registro Detalhado de Alunos & Desempenho</h3>
+                <p style="font-size: 0.9rem; color: #666;">Ordens e relatórios de tempo gasto para cada resposta dada por aluno.</p>
+                <div id="container-painel-professor"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Próxima Fase -->
+    <div class="modal-overlay" id="modal-fase">
+        <div class="modal-box">
+            <h2>🎉 Etapa Concluída!</h2>
+            <p id="texto-modal-fase">Você resolveu os desafios dessa fase. Pronto para ir para a próxima etapa?</p>
+            <div class="modal-botoes">
+                <button class="btn-modal btn-cancelar" onclick="fecharModal()">Revisar Fase</button>
+                <button class="btn-modal btn-confirmar" onclick="avancarParaProximaFase()">Próxima Fase ➡️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Final de Classificação -->
+    <div class="modal-overlay" id="modal-final">
+        <div class="modal-box">
+            <h2>🏆 Resultado Final</h2>
+            <p>Você completou todas as 4 fases do jogo!</p>
+            <div class="resultado-classificacao" id="conteudo-classificacao"></div>
+            <div class="modal-botoes">
+                <button class="btn-modal btn-confirmar" onclick="finalizarEVoltar()">Concluir e Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cadastrar Aluno pelo Professor -->
+    <div class="modal-overlay" id="modal-cadastrar-aluno-prof">
+        <div class="modal-box">
+            <h2>➕ Cadastrar Aluno</h2>
+            <div class="campo-form" style="margin-bottom: 10px;">
+                <label for="prof-novo-nome">Nome:</label>
+                <input type="text" id="prof-novo-nome" placeholder="Ex: Maria">
+            </div>
+            <div class="campo-form" style="margin-bottom: 10px;">
+                <label for="prof-novo-sobrenome">Sobrenome:</label>
+                <input type="text" id="prof-novo-sobrenome" placeholder="Ex: Oliveira">
+            </div>
+            <div class="campo-form" style="margin-bottom: 10px;">
+                <label for="prof-nova-serie">Série/Ano:</label>
+                <select id="prof-nova-serie">
+                    <option value="6º Ano EF">6º Ano EF</option>
+                    <option value="7º Ano EF">7º Ano EF</option>
+                    <option value="8º Ano EF">8º Ano EF</option>
+                    <option value="9º Ano EF">9º Ano EF</option>
+                    <option value="1º Ano EM">1º Ano EM</option>
+                    <option value="2º Ano EM">2º Ano EM</option>
+                    <option value="3º Ano EM">3º Ano EM</option>
+                </select>
+            </div>
+            <div class="campo-form" style="margin-bottom: 15px;">
+                <label for="prof-nova-senha-aluno">Senha Inicial:</label>
+                <input type="password" id="prof-nova-senha-aluno" placeholder="Defina a senha do aluno">
+            </div>
+            <div class="modal-botoes">
+                <button class="btn-modal btn-cancelar" onclick="fecharModalCadastrarAlunoProf()">Cancelar</button>
+                <button class="btn-modal btn-confirmar" onclick="salvarAlunoPeloProfessor()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cadastrar Novo Professor pelo Painel -->
+    <div class="modal-overlay" id="modal-cadastrar-prof">
+        <div class="modal-box">
+            <h2>👨‍🏫 Cadastrar Novo Professor</h2>
+            <div class="campo-form" style="margin-bottom: 10px;">
+                <label for="novo-prof-nome">Nome do Professor:</label>
+                <input type="text" id="novo-prof-nome" placeholder="Ex: Prof. Ana">
+            </div>
+            <div class="campo-form" style="margin-bottom: 15px;">
+                <label for="novo-prof-senha">Senha de Acesso:</label>
+                <input type="password" id="novo-prof-senha" placeholder="Digite a senha">
+            </div>
+            <div class="modal-botoes">
+                <button class="btn-modal btn-cancelar" onclick="fecharModalCadastrarNovoProf()">Cancelar</button>
+                <button class="btn-modal btn-confirmar" onclick="salvarNovoProfessor()">Salvar Professor</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let alunoAtual = null;
+        let professorLogado = null;
+        let faseAtual = 0;
+        let estadoCronometros = {};
+        let resolvidosNestaFase = 0;
+        let listaDesafiosGerados = [];
+
+        function alternarAba(tipo) {
+            document.getElementById('aba-aluno').classList.toggle('ativa', tipo === 'aluno');
+            document.getElementById('aba-professor').classList.toggle('ativa', tipo === 'professor');
+            
+            document.getElementById('area-aluno').classList.toggle('escondido', tipo !== 'aluno');
+            document.getElementById('area-professor').classList.toggle('escondido', tipo !== 'professor');
+        }
+
+        function alternarModoAluno(modo) {
+            document.getElementById('sub-aba-aluno-login').classList.toggle('ativa', modo === 'login');
+            document.getElementById('sub-aba-aluno-cadastro').classList.toggle('ativa', modo === 'cadastro');
+
+            document.getElementById('form-aluno-login').classList.toggle('escondido', modo !== 'login');
+            document.getElementById('form-aluno-cadastro').classList.toggle('escondido', modo !== 'cadastro');
+        }
+
+        function alternarModoProfessor(modo) {
+            document.getElementById('sub-aba-prof-login').classList.toggle('ativa', modo === 'login');
+            document.getElementById('sub-aba-prof-cadastro').classList.toggle('ativa', modo === 'cadastro');
+
+            document.getElementById('form-professor-login').classList.toggle('escondido', modo !== 'login');
+            document.getElementById('form-professor-cadastro').classList.toggle('escondido', modo !== 'cadastro');
+        }
+
+        function embaralhar(array) {
+            let copia = [...array];
+            for (let i = copia.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copia[i], copia[j]] = [copia[j], copia[i]];
+            }
+            return copia;
+        }
+
+        function randInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // --- GERADORES DINÂMICOS DE QUESTÕES (MUDAM PARA CADA ALUNO) ---
+        function geradorEtapa1_Pitágoras() {
+            const c1 = randInt(3, 10);
+            const c2 = randInt(3, 10);
+            const somaCorreta = c1*c1 + c2*c2;
+            const somaErrada = somaCorreta + randInt(2, 6);
+
+            const q1 = {
+                id: 'e1_q1',
+                titulo: '1. Teorema de Pitágoras - Cálculo de Hipotenusa',
+                enunciado: `Calcule a hipotenusa (x) de um triângulo retângulo cujos catetos medem ${c1} e ${c2}.`,
+                passos: [
+                    { texto: `Passo A: x² = ${c1}² + ${c2}²`, ehErro: false },
+                    { texto: `Passo B: x² = ${c1*c1} + ${c2*c2}`, ehErro: false },
+                    { texto: `Passo C: x² = ${somaErrada}`, ehErro: true, trecho: `${somaErrada}`, justificativa: `${c1}² = ${c1*c1} e ${c2}² = ${c2*c2}. A soma correta é ${somaCorreta}, e não ${somaErrada}.` },
+                    { texto: `Passo D: x = √${somaErrada} ≈ ${(Math.sqrt(somaErrada)).toFixed(2)}`, ehErro: false }
+                ]
+            };
+
+            const h = randInt(12, 20);
+            const cat = randInt(5, h - 2);
+            const diffCorreta = h*h - cat*cat;
+            const erroSoma = h*h + cat*cat;
+
+            const q2 = {
+                id: 'e1_q2',
+                titulo: '2. Teorema de Pitágoras - Encontrar Cateto',
+                enunciado: `Um triângulo retângulo possui hipotenusa valendo ${h} e um cateto igual a ${cat}. Encontre o cateto restante (b).`,
+                passos: [
+                    { texto: `Passo A: ${h}² = b² + ${cat}²`, ehErro: false },
+                    { texto: `Passo B: ${h*h} = b² + ${cat*cat}`, ehErro: false },
+                    { texto: `Passo C: b² = ${h*h} + ${cat*cat}`, ehErro: true, trecho: `${h*h} + ${cat*cat}`, justificativa: `Isolando b², passa-se subtraindo: ${h*h} - ${cat*cat} = ${diffCorreta}, não somando.` },
+                    { texto: `Passo D: b = √${erroSoma} ≈ ${(Math.sqrt(erroSoma)).toFixed(2)}`, ehErro: false }
+                ]
+            };
+
+            return [q1, q2];
+        }
+
+        function geradorEtapa2_Senos() {
+            const L1 = randInt(6, 15);
+            const multP = randInt(2, 5);
+
+            const q1 = {
+                id: 'e2_q1',
+                titulo: '1. Lei dos Senos - Lado Oposto',
+                enunciado: `Lado de ${L1}m oposto a 30°. Determine o lado (y) oposto a 45°. (Considere sen 30° = 0.5 e sen 45° = 0.7)`,
+                passos: [
+                    { texto: `Passo A: ${L1} / sen(30°) = y / sen(45°)`, ehErro: false },
+                    { texto: `Passo B: ${L1} / 0.5 = y / 0.7`, ehErro: false },
+                    { texto: `Passo C: ${multP}y = ${(L1 * 0.7).toFixed(1)}`, ehErro: true, trecho: `${multP}y`, justificativa: `Multiplicando cruzado: 0.5 * y = ${L1} * 0.7. O correto seria 0.5y = ${(L1 * 0.7).toFixed(1)}, e não ${multP}y.` },
+                    { texto: `Passo D: y = ${((L1 * 0.7) / multP).toFixed(2)}m`, ehErro: false }
+                ]
+            };
+
+            const a = randInt(8, 14);
+            const b = randInt(15, 22);
+
+            const q2 = {
+                id: 'e2_q2',
+                titulo: '2. Lei dos Senos - Ângulos e Razões',
+                enunciado: `Um triângulo possui lados a = ${a} e b = ${b}. O ângulo oposto a "a" é 30° (sen 30° = 0.5). Calcule sen(B).`,
+                passos: [
+                    { texto: `Passo A: ${a} / sen(30°) = ${b} / sen(B)`, ehErro: false },
+                    { texto: `Passo B: ${a} / 0.5 = ${b} / sen(B)`, ehErro: false },
+                    { texto: `Passo C: ${(a/0.5).toFixed(0)} = ${b} / sen(B)  =>  sen(B) = ${(a/0.5).toFixed(0)} / ${b}`, ehErro: true, trecho: `${(a/0.5).toFixed(0)} / ${b}`, justificativa: `Isolando sen(B), o correto é ${b} / ${(a/0.5).toFixed(0)} = ${(b / (a/0.5)).toFixed(2)}. O valor do seno não pode exceder 1.` },
+                    { texto: `Passo D: sen(B) = ${((a/0.5)/b).toFixed(2)}`, ehErro: false }
+                ]
+            };
+
+            return [q1, q2];
+        }
+
+        function geradorEtapa3_Cossenos() {
+            const l1 = randInt(4, 8);
+            const l2 = randInt(5, 9);
+            const p1 = l1*l1 + l2*l2;
+            const p2 = 2 * l1 * l2 * 0.5;
+
+            const q1 = {
+                id: 'e3_q1',
+                titulo: '1. Lei dos Cossenos - Ângulo de 60°',
+                enunciado: `Determine z num triângulo com lados ${l1} e ${l2} e ângulo entre eles de 60°. (cos 60° = 0.5)`,
+                passos: [
+                    { texto: `Passo A: z² = ${l1}² + ${l2}² - 2 * ${l1} * ${l2} * cos(60°)`, ehErro: false },
+                    { texto: `Passo B: z² = ${l1*l1} + ${l2*l2} - ${2*l1*l2} * 0.5`, ehErro: false },
+                    { texto: `Passo C: z² = ${p1} + ${p2}`, ehErro: true, trecho: `+ ${p2}`, justificativa: `O sinal da fórmula é negativo. O correto é ${p1} - ${p2} = ${p1 - p2}.` },
+                    { texto: `Passo D: z = √${p1 + p2} ≈ ${(Math.sqrt(p1 + p2)).toFixed(2)}`, ehErro: false }
+                ]
+            };
+
+            const lado = randInt(3, 7);
+            const prod = 2 * lado * lado;
+
+            const q2 = {
+                id: 'e3_q2',
+                titulo: '2. Lei dos Cossenos - Ângulo de 90°',
+                enunciado: `Ache x no triângulo com lados iguais a ${lado} e ângulo entre eles de 90°. (cos 90° = 0)`,
+                passos: [
+                    { texto: `Passo A: x² = ${lado}² + ${lado}² - 2 * ${lado} * ${lado} * cos(90°)`, ehErro: false },
+                    { texto: `Passo B: x² = ${lado*lado} + ${lado*lado} - ${prod} * 0`, ehErro: false },
+                    { texto: `Passo C: x² = ${2*lado*lado} - ${prod}`, ehErro: true, trecho: `${2*lado*lado} - ${prod}`, justificativa: `Multiplicação priorizada: ${prod} * 0 = 0. Então x² = ${2*lado*lado} - 0 = ${2*lado*lado}.` },
+                    { texto: `Passo D: x = 0`, ehErro: false }
+                ]
+            };
+
+            return [q1, q2];
+        }
+
+        function geradorEtapa4_Semelhanca() {
+            const k = randInt(2, 4);
+            const pMenor = randInt(10, 18);
+
+            const q1 = {
+                id: 'e4_q1',
+                titulo: '1. Relações de Semelhança - Perímetro',
+                enunciado: `Dois triângulos semelhantes possuem razão de semelhança k = ${k}. O menor possui perímetro ${pMenor}. Qual o perímetro do maior?`,
+                passos: [
+                    { texto: `Passo A: Razão de semelhança k = ${k}`, ehErro: false },
+                    { texto: `Passo B: Perímetro do menor = ${pMenor}`, ehErro: false },
+                    { texto: `Passo C: Perímetro Maior = ${pMenor} * ${k}² = ${pMenor} * ${k*k}`, ehErro: true, trecho: `${k}²`, justificativa: `A razão dos perímetros é linear (k), e não quadrática (k²). O correto é ${pMenor} * ${k} = ${pMenor * k}.` },
+                    { texto: `Passo D: Perímetro do Maior = ${pMenor * k * k}`, ehErro: false }
+                ]
+            };
+
+            const kArea = randInt(2, 5);
+            const a1 = randInt(3, 8);
+            const a2 = a1 * kArea * kArea;
+
+            const q2 = {
+                id: 'e4_q2',
+                titulo: '2. Relações de Semelhança - Razão de Áreas',
+                enunciado: `Dois triângulos semelhantes têm áreas A1 = ${a1} cm² e A2 = ${a2} cm². Qual a razão de semelhança k das alturas?`,
+                passos: [
+                    { texto: `Passo A: Razão de áreas = A2 / A1 = ${a2} / ${a1} = ${kArea*kArea}`, ehErro: false },
+                    { texto: `Passo B: Razão das áreas (k²) = ${kArea*kArea}`, ehErro: false },
+                    { texto: `Passo C: k = ${kArea*kArea} / 2 = ${(kArea*kArea/2).toFixed(1)}`, ehErro: true, trecho: `${kArea*kArea} / 2`, justificativa: `Se k² = ${kArea*kArea}, extrai-se a raiz quadrada: k = √${kArea*kArea} = ${kArea}. Não se divide por 2.` },
+                    { texto: `Passo D: k = ${(kArea*kArea/2).toFixed(1)}`, ehErro: false }
+                ]
+            };
+
+            return [q1, q2];
+        }
+
+        // --- GERENCIAMENTO LOCAL STORAGE ---
+        function obterAlunosDoStorage() {
+            const dados = localStorage.getItem('detetive_alunos');
+            return dados ? JSON.parse(dados) : [];
+        }
+
+        function salvarAlunosNoStorage(alunos) {
+            localStorage.setItem('detetive_alunos', JSON.stringify(alunos));
+        }
+
+        function obterProfessoresDoStorage() {
+            const dados = localStorage.getItem('detetive_professores');
+            if (dados) {
+                return JSON.parse(dados);
+            } else {
+                const padrao = [{ nome: 'Admin', senha: '1234' }];
+                localStorage.setItem('detetive_professores', JSON.stringify(padrao));
+                return padrao;
+            }
+        }
+
+        function salvarProfessoresNoStorage(professores) {
+            localStorage.setItem('detetive_professores', JSON.stringify(professores));
+        }
+
+        // --- AUTENTICAÇÃO E CADASTRO ALUNO ---
+        function acessarAluno(e) {
+            e.preventDefault();
+            const nomeCompleto = document.getElementById('login-nome-aluno').value.trim();
+            const senha = document.getElementById('login-senha-aluno').value;
+
+            let alunos = obterAlunosDoStorage();
+            let alunoEncontrado = alunos.find(a => a.nome.toLowerCase() === nomeCompleto.toLowerCase());
+
+            if (alunoEncontrado) {
+                if (alunoEncontrado.senha !== senha) {
+                    alert('Senha incorreta! Verifique sua senha e tente novamente.');
+                    return;
+                }
+                alunoAtual = alunoEncontrado;
+                if (alunoAtual.erros === undefined) alunoAtual.erros = 0;
+                iniciarSessaoJogo();
+            } else {
+                alert('Aluno não encontrado! Verifique se digitou o nome corretamente ou crie uma conta.');
+            }
+        }
+
+        function cadastrarAlunoTelaInicial(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cad-nome-aluno').value.trim();
+            const sobrenome = document.getElementById('cad-sobrenome-aluno').value.trim();
+            const serie = document.getElementById('cad-serie-aluno').value;
+            const senha = document.getElementById('cad-senha-aluno').value;
+            const confirmSenha = document.getElementById('cad-confirm-senha-aluno').value;
+
+            if (!nome || !sobrenome || !serie || !senha || !confirmSenha) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            if (senha !== confirmSenha) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            const nomeCompleto = `${nome} ${sobrenome}`;
+            const idAluno = `${nome}_${sobrenome}_${serie}`.toLowerCase().replace(/\s+/g, '');
+            let alunos = obterAlunosDoStorage();
+
+            if (alunos.some(a => a.id === idAluno || a.nome.toLowerCase() === nomeCompleto.toLowerCase())) {
+                alert('Já existe um aluno cadastrado com este nome.');
+                return;
+            }
+
+            let novoAluno = {
+                id: idAluno,
+                nome: nomeCompleto,
+                serie: serie,
+                senha: senha,
+                pontos: 0,
+                erros: 0,
+                temposRespostas: []
+            };
+
+            alunos.push(novoAluno);
+            salvarAlunosNoStorage(alunos);
+
+            alert(`Aluno "${nomeCompleto}" cadastrado com sucesso! Faça login para começar.`);
+
+            document.getElementById('cad-nome-aluno').value = '';
+            document.getElementById('cad-sobrenome-aluno').value = '';
+            document.getElementById('cad-serie-aluno').selectedIndex = 0;
+            document.getElementById('cad-senha-aluno').value = '';
+            document.getElementById('cad-confirm-senha-aluno').value = '';
+            alternarModoAluno('login');
+        }
+
+        // --- AUTENTICAÇÃO E CADASTRO PROFESSOR ---
+        function acessarProfessor(e) {
+            e.preventDefault();
+            const nomeProf = document.getElementById('nome-prof').value.trim();
+            const senhaProf = document.getElementById('senha-prof').value;
+
+            let professores = obterProfessoresDoStorage();
+            let profEncontrado = professores.find(p => p.nome.toLowerCase() === nomeProf.toLowerCase() && p.senha === senhaProf);
+
+            if (profEncontrado) {
+                professorLogado = profEncontrado;
+                document.getElementById('tela-cadastro').classList.add('escondido');
+                document.getElementById('tela-professor').classList.remove('escondido');
+                document.getElementById('indicador-fase').innerText = "Painel do Professor";
+                document.getElementById('info-prof-nome').innerText = profEncontrado.nome;
+                renderizarPainelProfessor();
+            } else {
+                alert('Nome do professor ou senha incorretos!');
+            }
+        }
+
+        function cadastrarProfessorTelaInicial(e) {
+            e.preventDefault();
+            const nomeProf = document.getElementById('cad-nome-prof').value.trim();
+            const senhaProf = document.getElementById('cad-senha-prof').value;
+            const confirmSenha = document.getElementById('cad-confirm-senha-prof').value;
+
+            if (!nomeProf || !senhaProf || !confirmSenha) {
+                alert('Preencha todos os campos.');
+                return;
+            }
+
+            if (senhaProf !== confirmSenha) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            let professores = obterProfessoresDoStorage();
+            if (professores.some(p => p.nome.toLowerCase() === nomeProf.toLowerCase())) {
+                alert('Já existe um professor cadastrado com este nome.');
+                return;
+            }
+
+            professores.push({ nome: nomeProf, senha: senhaProf });
+            salvarProfessoresNoStorage(professores);
+
+            alert(`Professor "${nomeProf}" cadastrado com sucesso! Faça login para continuar.`);
+            
+            document.getElementById('cad-nome-prof').value = '';
+            document.getElementById('cad-senha-prof').value = '';
+            document.getElementById('cad-confirm-senha-prof').value = '';
+            alternarModoProfessor('login');
+        }
+
+        function iniciarSessaoJogo() {
+            if (!alunoAtual) {
+                sairParaLogin();
+                return;
+            }
+
+            listaDesafiosGerados = [
+                geradorEtapa1_Pitágoras(),
+                geradorEtapa2_Senos(),
+                geradorEtapa3_Cossenos(),
+                geradorEtapa4_Semelhanca()
+            ];
+
+            document.getElementById('tela-cadastro').classList.add('escondido');
+            document.getElementById('tela-jogo').classList.remove('escondido');
+            
+            document.getElementById('info-aluno-nome').innerText = alunoAtual.nome;
+            document.getElementById('info-aluno-serie').innerText = alunoAtual.serie;
+            document.getElementById('info-aluno-pontos').innerText = alunoAtual.pontos;
+            document.getElementById('info-aluno-erros').innerText = alunoAtual.erros || 0;
+
+            carregarFase(0);
+        }
+
+        function sairParaLogin() {
+            alunoAtual = null;
+            professorLogado = null;
+            document.getElementById('tela-jogo').classList.add('escondido');
+            document.getElementById('tela-professor').classList.add('escondido');
+            document.getElementById('tela-cadastro').classList.remove('escondido');
+            document.getElementById('indicador-fase').innerText = "Identificação do Investigador";
+            
+            document.getElementById('login-nome-aluno').value = '';
+            document.getElementById('login-senha-aluno').value = '';
+            document.getElementById('cad-nome-aluno').value = '';
+            document.getElementById('cad-sobrenome-aluno').value = '';
+            document.getElementById('cad-serie-aluno').selectedIndex = 0;
+            document.getElementById('cad-senha-aluno').value = '';
+            document.getElementById('cad-confirm-senha-aluno').value = '';
+
+            document.getElementById('nome-prof').value = '';
+            document.getElementById('senha-prof').value = '';
+            document.getElementById('cad-nome-prof').value = '';
+            document.getElementById('cad-senha-prof').value = '';
+            document.getElementById('cad-confirm-senha-prof').value = '';
+        }
+
+        function registrarErroTentativa() {
+            if (!alunoAtual.erros) alunoAtual.erros = 0;
+            alunoAtual.erros += 1;
+            document.getElementById('info-aluno-erros').innerText = alunoAtual.erros;
+
+            let alunos = obterAlunosDoStorage();
+            let idx = alunos.findIndex(a => a.id === alunoAtual.id);
+            if (idx !== -1) {
+                alunos[idx] = alunoAtual;
+                salvarAlunosNoStorage(alunos);
+            }
+        }
+
+        function registrarAcertoETempo(idDesafio, tempoGasto) {
+            alunoAtual.pontos += 1;
+
+            let desafioInfo = null;
+            for (let f of listaDesafiosGerados) {
+                let achou = f.find(d => d.id === idDesafio);
+                if (achou) { desafioInfo = achou; break; }
+            }
+
+            let titulo = desafioInfo ? desafioInfo.titulo : idDesafio;
+
+            if (!alunoAtual.temposRespostas) {
+                alunoAtual.temposRespostas = [];
+            }
+
+            alunoAtual.temposRespostas.push({
+                desafioTitulo: titulo,
+                tempoGastoSec: tempoGasto
+            });
+
+            document.getElementById('info-aluno-pontos').innerText = alunoAtual.pontos;
+
+            let alunos = obterAlunosDoStorage();
+            let idx = alunos.findIndex(a => a.id === alunoAtual.id);
+            if (idx !== -1) {
+                alunos[idx] = alunoAtual;
+                salvarAlunosNoStorage(alunos);
+            }
+        }
+
+        function renderizarPainelProfessor() {
+            const container = document.getElementById('container-painel-professor');
+            let alunos = obterAlunosDoStorage();
+
+            if (alunos.length === 0) {
+                container.innerHTML = '<p style="color: #666;">Nenhum aluno cadastrado no sistema.</p>';
+                return;
+            }
+
+            alunos.sort((a, b) => b.pontos - a.pontos);
+
+            let tabelaHTML = `
+                <table class="tabela-ranking">
+                    <thead>
+                        <tr>
+                            <th>Aluno / Série</th>
+                            <th>Total de Acertos</th>
+                            <th>Total de Erros</th>
+                            <th>Média de Tempo / Questão</th>
+                            <th>Histórico de Tempos por Resposta</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            alunos.forEach(a => {
+                let respostas = a.temposRespostas || [];
+                let tempoTotal = respostas.reduce((sum, r) => sum + r.tempoGastoSec, 0);
+                let mediaTempo = respostas.length > 0 ? (tempoTotal / respostas.length).toFixed(1) : 'N/A';
+
+                let listaTemposHTML = '<ul class="detalhes-tempo">';
+                if (respostas.length === 0) {
+                    listaTemposHTML += '<li>Nenhum desafio concluído ainda.</li>';
+                } else {
+                    respostas.forEach((r, idx) => {
+                        listaTemposHTML += `<li><strong>#${idx+1} ${r.desafioTitulo}:</strong> ${r.tempoGastoSec}s</li>`;
+                    });
+                }
+                listaTemposHTML += '</ul>';
+
+                tabelaHTML += `
+                    <tr>
+                        <td><strong>${a.nome}</strong><br><small style="color: #666;">${a.serie}</small></td>
+                        <td><strong style="font-size: 1.1em; color: #1a73e8;">${a.pontos}</strong> acerto(s)</td>
+                        <td><strong style="font-size: 1.1em; color: #d90429;">${a.erros || 0}</strong> erro(s)</td>
+                        <td>${mediaTempo !== 'N/A' ? mediaTempo + ' segundos' : 'N/A'}</td>
+                        <td>${listaTemposHTML}</td>
+                        <td>
+                            <button class="btn-deletar-aluno" onclick="deletarAluno('${a.id}')">Excluir</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tabelaHTML += '</tbody></table>';
+            container.innerHTML = tabelaHTML;
+        }
+
+        function deletarAluno(idAluno) {
+            if (confirm('Tem certeza que deseja excluir este aluno e todos os seus registros?')) {
+                let alunos = obterAlunosDoStorage();
+                alunos = alunos.filter(a => a.id !== idAluno);
+                salvarAlunosNoStorage(alunos);
+                renderizarPainelProfessor();
+            }
+        }
+
+        function limparHistoricoGeral() {
+            if (confirm('ATENÇÃO: Deseja apagar TODOS os alunos e o histórico de desempenho?')) {
+                localStorage.removeItem('detetive_alunos');
+                renderizarPainelProfessor();
+            }
+        }
+
+        // --- MODAIS DO PROFESSOR ---
+        function abrirModalCadastrarAlunoProf() {
+            document.getElementById('modal-cadastrar-aluno-prof').classList.add('visivel');
+        }
+
+        function fecharModalCadastrarAlunoProf() {
+            document.getElementById('modal-cadastrar-aluno-prof').classList.remove('visivel');
+            document.getElementById('prof-novo-nome').value = '';
+            document.getElementById('prof-novo-sobrenome').value = '';
+            document.getElementById('prof-nova-senha-aluno').value = '';
+        }
+
+        function salvarAlunoPeloProfessor() {
+            const nome = document.getElementById('prof-novo-nome').value.trim();
+            const sobrenome = document.getElementById('prof-novo-sobrenome').value.trim();
+            const serie = document.getElementById('prof-nova-serie').value;
+            const senha = document.getElementById('prof-nova-senha-aluno').value;
+
+            if (!nome || !sobrenome || !senha) {
+                alert('Preencha nome, sobrenome e senha para o aluno.');
+                return;
+            }
+
+            const idAluno = `${nome}_${sobrenome}_${serie}`.toLowerCase().replace(/\s+/g, '');
+            let alunos = obterAlunosDoStorage();
+
+            if (alunos.some(a => a.id === idAluno)) {
+                alert('Este aluno já está cadastrado!');
+                return;
+            }
+
+            alunos.push({
+                id: idAluno,
+                nome: `${nome} ${sobrenome}`,
+                serie: serie,
+                senha: senha,
+                pontos: 0,
+                erros: 0,
+                temposRespostas: []
+            });
+
+            salvarAlunosNoStorage(alunos);
+            fecharModalCadastrarAlunoProf();
+            renderizarPainelProfessor();
+        }
+
+        function abrirModalCadastrarNovoProf() {
+            document.getElementById('modal-cadastrar-prof').classList.add('visivel');
+        }
+
+        function fecharModalCadastrarNovoProf() {
+            document.getElementById('modal-cadastrar-prof').classList.remove('visivel');
+            document.getElementById('novo-prof-nome').value = '';
+            document.getElementById('novo-prof-senha').value = '';
+        }
+
+        function salvarNovoProfessor() {
+            const nomeProf = document.getElementById('novo-prof-nome').value.trim();
+            const senhaProf = document.getElementById('novo-prof-senha').value;
+
+            if (!nomeProf || !senhaProf) {
+                alert('Preencha o nome e a senha do professor.');
+                return;
+            }
+
+            let professores = obterProfessoresDoStorage();
+            if (professores.some(p => p.nome.toLowerCase() === nomeProf.toLowerCase())) {
+                alert('Já existe um professor cadastrado com este nome.');
+                return;
+            }
+
+            professores.push({ nome: nomeProf, senha: senhaProf });
+            salvarProfessoresNoStorage(professores);
+            alert(`Professor ${nomeProf} cadastrado com sucesso!`);
+            fecharModalCadastrarNovoProf();
+        }
+
+        // --- LÓGICA DO JOGO ---
+        const nomesEtapas = [
+            'Etapa 1: Teorema de Pitágoras',
+            'Etapa 2: Lei dos Senos',
+            'Etapa 3: Lei dos Cossenos',
+            'Etapa 4: Relações de Semelhança'
+        ];
+
+        function carregarFase(indiceFase) {
+            faseAtual = indiceFase;
+            resolvidosNestaFase = 0;
+            estadoCronometros = {};
+            
+            document.getElementById('indicador-fase').innerText = `${nomesEtapas[faseAtual]} (${faseAtual + 1}/4)`;
+            const container = document.getElementById('lista-desafios');
+            container.innerHTML = '';
+
+            const listaDesafios = listaDesafiosGerados[faseAtual];
+
+            listaDesafios.forEach((desafio) => {
+                const desafioDiv = document.createElement('div');
+                desafioDiv.className = 'desafio';
+                desafioDiv.id = desafio.id;
+
+                const passosEmbaralhados = embaralhar(desafio.passos);
+
+                let passosHTML = '';
+                passosEmbaralhados.forEach((p) => {
+                    let textoRenderizado = p.texto;
+                    if (p.ehErro && p.trecho) {
+                        textoRenderizado = textoRenderizado.replace(
+                            p.trecho, 
+                            `<span class="trecho-conta">${p.trecho}</span>`
+                        );
+                    }
+
+                    passosHTML += `
+                        <div class="linha-conta bloqueada" onclick="interagirLinha(this, '${desafio.id}', ${p.ehErro}, '${p.justificativa || ''}')">
+                            ${textoRenderizado}
+                        </div>
+                    `;
+                });
+
+                desafioDiv.innerHTML = `
+                    <div class="header-desafio">
+                        <h2>${desafio.titulo}</h2>
+                        <div class="controles-timer">
+                            <button class="btn-iniciar-desafio" id="btn-start-${desafio.id}" onclick="iniciarDesafioIndividual('${desafio.id}')">▶️ Começar</button>
+                            <div class="cronometro-box" id="timer-${desafio.id}">⏱️ 01:00</div>
+                        </div>
+                    </div>
+                    <div class="enunciado">${desafio.enunciado}</div>
+                    ${passosHTML}
+                    <div class="feedback" id="fb-${desafio.id}"></div>
+                `;
+
+                container.appendChild(desafioDiv);
+
+                estadoCronometros[desafio.id] = {
+                    tempoTotal: 60,
+                    tempoRestante: 60,
+                    intervalId: null,
+                    iniciado: false,
+                    concluido: false
+                };
+            });
+        }
+
+        function iniciarDesafioIndividual(idDesafio) {
+            const estado = estadoCronometros[idDesafio];
+            if (estado.iniciado) return;
+
+            estado.iniciado = true;
+            
+            const btn = document.getElementById(`btn-start-${idDesafio}`);
+            btn.disabled = true;
+            btn.innerText = "Em andamento...";
+
+            const desafioDiv = document.getElementById(idDesafio);
+            desafioDiv.classList.add('ativo');
+            const linhas = desafioDiv.getElementsByClassName('linha-conta');
+            for (let l of linhas) {
+                l.classList.remove('bloqueada');
+            }
+
+            const timerBox = document.getElementById(`timer-${idDesafio}`);
+            estado.intervalId = setInterval(() => {
+                estado.tempoRestante--;
+
+                let min = Math.floor(estado.tempoRestante / 60);
+                let seg = estado.tempoRestante % 60;
+                timerBox.innerText = `⏱️ ${min.toString().padStart(2, '0')}:${seg.toString().padStart(2, '0')}`;
+
+                if (estado.tempoRestante <= 10) {
+                    timerBox.classList.add('alerta');
+                }
+
+                if (estado.tempoRestante <= 0) {
+                    clearInterval(estado.intervalId);
+                    estado.concluido = true;
+                    ativarEfeitoPiscar(idDesafio);
+                }
+            }, 1000);
+        }
+
+        function interagirLinha(elemento, idDesafio, ehErro, justificativa) {
+            const estado = estadoCronometros[idDesafio];
+
+            if (!estado.iniciado || estado.concluido) return;
+
+            const desafioDiv = document.getElementById(idDesafio);
+            const feedbackDiv = document.getElementById('fb-' + idDesafio);
+
+            if (ehErro) {
+                const linhas = desafioDiv.getElementsByClassName('linha-conta');
+                for (let l of linhas) {
+                    l.style.border = "1px solid #e0e0e0";
+                    l.style.backgroundColor = "#f8f9fa";
+                }
+
+                elemento.style.border = "2px solid #2b9348";
+                elemento.style.backgroundColor = "#e8f5e9";
+                feedbackDiv.innerHTML = `<span class='correto'>🎯 Acertou! Erro encontrado: ${justificativa}</span>`;
+                
+                clearInterval(estado.intervalId);
+                estado.concluido = true;
+                resolvidosNestaFase++;
+
+                let tempoGasto = estado.tempoTotal - estado.tempoRestante;
+                registrarAcertoETempo(idDesafio, tempoGasto);
+
+                if (resolvidosNestaFase === listaDesafiosGerados[faseAtual].length) {
+                    setTimeout(exibirModal, 800);
+                }
+            } else {
+                elemento.classList.add('linha-desativada');
+                feedbackDiv.innerHTML = "<span class='incorreto'>❌ Esta linha está matematicamente correta. Ela foi desabilitada! Procure o erro nas outras opções.</span>";
+                
+                registrarErroTentativa();
+            }
+        }
+
+        function ativarEfeitoPiscar(idDesafio) {
+            const desafioDiv = document.getElementById(idDesafio);
+            const trecho = desafioDiv.querySelector('.trecho-conta');
+            const feedbackDiv = document.getElementById('fb-' + idDesafio);
+
+            if (trecho) {
+                trecho.classList.add('destaque-erro-piscando');
+            }
+
+            feedbackDiv.innerHTML = "<span class='incorreto'>⏰ O tempo deste desafio acabou! O trecho com o erro está piscando acima.</span>";
+        }
+
+        function exibirModal() {
+            if (faseAtual < 3) {
+                document.getElementById('texto-modal-fase').innerText = `Você completou a ${nomesEtapas[faseAtual]}! Clique abaixo para ir para a ${nomesEtapas[faseAtual + 1]}.`;
+                document.getElementById('modal-fase').classList.add('visivel');
+            } else {
+                exibirClassificacaoFinal();
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-fase').classList.remove('visivel');
+        }
+
+        function avancarParaProximaFase() {
+            fecharModal();
+            carregarFase(faseAtual + 1);
+        }
+
+        function exibirClassificacaoFinal() {
+            let alunos = obterAlunosDoStorage();
+
+            // Ordenação por maior pontuação, menor número de erros e menor tempo
+            alunos.sort((a, b) => {
+                if (b.pontos !== a.pontos) return b.pontos - a.pontos;
+                let errA = a.erros || 0;
+                let errB = b.erros || 0;
+                if (errA !== errB) return errA - errB;
+                let tA = (a.temposRespostas || []).reduce((s, r) => s + r.tempoGastoSec, 0);
+                let tB = (b.temposRespostas || []).reduce((s, r) => s + r.tempoGastoSec, 0);
+                return tA - tB;
+            });
+
+            // Ranking Geral e Por Série
+            let posGeral = alunos.findIndex(a => a.id === alunoAtual.id) + 1;
+            let alunosMesmaSerie = alunos.filter(a => a.serie === alunoAtual.serie);
+            let posSerie = alunosMesmaSerie.findIndex(a => a.id === alunoAtual.id) + 1;
+
+            let errosTotais = alunoAtual.erros || 0;
+            let acertosTotais = alunoAtual.pontos;
+
+            // Condição: Errou 5 vezes ou mais (ou acertou 5 ou menos) -> Tente novamente e pontuação zerada
+            let errouDemaisOuPontuacaoBaixa = errosTotais >= 5 || acertosTotais <= 5;
+
+            const boxResultados = document.getElementById('conteudo-classificacao');
+
+            if (errouDemaisOuPontuacaoBaixa) {
+                boxResultados.innerHTML = `
+                    <div class="msg-fracasso">❌ Tente novamente!</div>
+                    <p>Você cometeu <strong>${errosTotais} erro(s)</strong> e obteve <strong>${acertosTotais} acerto(s)</strong>.</p>
+                    <p>Sua pontuação foi zerada para que você possa tentar novamente.</p>
+                `;
+
+                // Reseta os dados do aluno no storage
+                alunoAtual.pontos = 0;
+                alunoAtual.erros = 0;
+                alunoAtual.temposRespostas = [];
+
+                let idx = alunos.findIndex(a => a.id === alunoAtual.id);
+                if (idx !== -1) {
+                    alunos[idx] = alunoAtual;
+                    salvarAlunosNoStorage(alunos);
+                }
+            } else {
+                boxResultados.innerHTML = `
+                    <div class="msg-sucesso">🎉 Parabéns pelo excelente desempenho!</div>
+                    <h3>🎯 Resumo do Investigador (${alunoAtual.nome}):</h3>
+                    <p><strong>Pontuação Final:</strong> ${alunoAtual.pontos} acerto(s)</p>
+                    <p><strong>Erros Cometidos:</strong> ${errosTotais} erro(s)</p>
+                    <p><strong>Série/Ano:</strong> ${alunoAtual.serie}</p>
+                    <hr>
+                    <p><strong>🏆 Posição na sua Série (${alunoAtual.serie}):</strong> ${posSerie}º lugar (de ${alunosMesmaSerie.length} alunos)</p>
+                    <p><strong>🌍 Posição no Ranking Geral:</strong> ${posGeral}º lugar (de ${alunos.length} alunos)</p>
+                `;
+            }
+
+            document.getElementById('modal-final').classList.add('visivel');
+        }
+
+        function finalizarEVoltar() {
+            document.getElementById('modal-final').classList.remove('visivel');
+            sairParaLogin();
+        }
+    </script>
+</body>
+</html>
